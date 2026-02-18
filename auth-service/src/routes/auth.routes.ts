@@ -1,14 +1,29 @@
-import { Router } from "express";
+import { Router, Request, Response } from "express";
 import bcrypt from "bcrypt";
 import { pool } from "../config/database";
 import jwt from "jsonwebtoken";
 import { authenticate } from "../middlewares/auth.middleware";
+import { body, validationResult } from "express-validator";
+import { AuthRequest } from "../middlewares/auth.middleware";
 
 
 
 const router = Router();
 
-router.post("/register", async (req, res) => {
+// REGISTER 
+
+router.post("/register", [
+  body("email").isEmail().withMessage("Invalid email format"),
+  body("password")
+  .isLength({ min: 6})
+  .withMessage("Password must be at least 6 characters"),
+], 
+async (req: Request, res: Response) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
   const { email, password } = req.body;
 
   try {
@@ -26,8 +41,18 @@ router.post("/register", async (req, res) => {
   }
 });
 
+// LOGIN 
 
-router.post("/login", async (req, res) => {
+router.post("/login", [
+  body("email").isEmail().withMessage("Invalid email format"),
+  body("password").notEmpty().withMessage("Password is required"),
+], 
+async (req: Request, res: Response) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
   const { email, password } = req.body;
 
   try {
@@ -57,18 +82,21 @@ router.post("/login", async (req, res) => {
     res.json({ token });
 
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: "Login failed" });
   }
 });
 
-router.get("/profile", authenticate, (req: any, res) => {
+// PROTECTED ROUTES
+
+router.get("/profile", authenticate, (req: AuthRequest, res: Response) => {
   res.json({
     message: "Protected route accessed",
     user: req.user,
   });
 });
 
-router.get("/me", authenticate, async (req: any, res) => {
+router.get("/me", authenticate, async (req: AuthRequest, res: Response) => {
   try {
     const userId = req.user.id;
 
