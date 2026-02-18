@@ -17,6 +17,7 @@ router.post("/register", [
   body("password")
   .isLength({ min: 6})
   .withMessage("Password must be at least 6 characters"),
+  body("role").notEmpty().withMessage("Role is required"),
 ], 
 async (req: Request, res: Response) => {
   const errors = validationResult(req);
@@ -24,14 +25,14 @@ async (req: Request, res: Response) => {
     return res.status(400).json({ errors: errors.array() });
   }
 
-  const { email, password } = req.body;
+  const { email, password, role } = req.body;
 
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     await pool.query(
       "INSERT INTO auth_users (email, password_hash, role) VALUES ($1, $2, $3)",
-      [email, hashedPassword, "student"]
+      [email, hashedPassword, role]
     );
 
     res.status(201).json({ message: "User created" });
