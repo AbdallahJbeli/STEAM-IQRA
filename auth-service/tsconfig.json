@@ -1,3 +1,10 @@
+// This configures TypeScript compilation.
+
+// - **src**: Source code location.
+// - **dist**: Compiled output location.
+// - **commonjs**: Module system for Node.js.
+// - **strict**: Enforces strict type checking.
+
 {
   "compilerOptions": {
     "target": "ES2019",

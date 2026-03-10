@@ -1,8 +1,15 @@
 import { Request, Response, NextFunction } from "express";
-import jwt from "jsonwebtoken";
+import jwt, { TokenExpiredError } from "jsonwebtoken";
+
+export interface TokenPayload {
+  id: number;
+  role: string;
+  iat?: number;
+  exp?: number;
+}
 
 export interface AuthRequest extends Request {
-  user?: any;
+  user?: TokenPayload;
 }
 
 export const authenticate = (
@@ -22,16 +29,20 @@ export const authenticate = (
   }
 
   const token = parts[1];
+  const secret = process.env.JWT_SECRET;
+
+  if (!secret) {
+    return res.status(500).json({ error: "Server misconfiguration" });
+  }
 
   try {
-    const decoded = jwt.verify(
-      token,
-      process.env.JWT_SECRET as string
-    );
-
+    const decoded = jwt.verify(token, secret) as TokenPayload;
     req.user = decoded;
     next();
   } catch (error) {
+    if (error instanceof TokenExpiredError) {
+      return res.status(401).json({ error: "Token expired" });
+    }
     return res.status(403).json({ error: "Invalid token" });
   }
 };

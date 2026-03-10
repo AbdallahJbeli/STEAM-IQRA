@@ -1,17 +1,23 @@
 import { Router } from "express";
+import rateLimit from "express-rate-limit";
 import { authenticate } from "../middlewares/auth.middleware";
 import { AuthController } from "../controllers/auth.controller";
 
 const router = Router();
 
-// REGISTER
-router.post("/register", AuthController.registerValidators, AuthController.register);
+const authLimiter = rateLimit({
+	windowMs: 15 * 60 * 1000,
+	max: 5, 
+	message: { error: "Too many requests, please try again later." },
+	standardHeaders: true,
+	legacyHeaders: false,
+});
 
-// LOGIN
-router.post("/login", AuthController.loginValidators, AuthController.login);
+router.post("/register", authLimiter, AuthController.registerValidators, AuthController.register);
 
-// PROTECTED ROUTES
-router.get("/profile", authenticate, AuthController.getProfile);
+router.post("/login", authLimiter, AuthController.loginValidators, AuthController.login);
+
+router.post("/activate", authLimiter, AuthController.activateValidators, AuthController.activate);
 
 router.get("/me", authenticate, AuthController.getMe);
 
