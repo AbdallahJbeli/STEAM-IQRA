@@ -58,6 +58,10 @@ export const authApi = {
 
   getMe: (): Promise<User> =>
     api.get("/me").then((res) => res.data),
+
+  // add to authApi in src/services/auth.api.ts
+  createTrainer: (email: string): Promise<{ message: string; credentials: { email: string; tempPassword: string } }> =>
+    api.post("/create-trainer", { email }).then((res) => res.data),
 };
 
 

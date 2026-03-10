@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../context/AuthContext";
-import { Eye, EyeOff, Globe } from "lucide-react";
+import { Eye, EyeOff } from "lucide-react";
 
 const languages = [
-  { code: "ar", label: "العربية" },
-  { code: "fr", label: "Français" },
-  { code: "en", label: "English" },
+  { code: "ar", label: "AR" },
+  { code: "en", label: "EN" },
+  { code: "fr", label: "FR" },
 ];
 
 const LoginPage = () => {
@@ -27,137 +27,172 @@ const LoginPage = () => {
     setIsLoading(true);
     try {
       await login(email, password);
-    } catch (err: any) {
+    } catch {
       setError(t("login.error"));
     } finally {
       setIsLoading(false);
     }
   };
 
+  const inputStyle = {
+    background: "rgba(255,255,255,0.07)",
+    border: "1px solid rgba(255,255,255,0.1)",
+    color: "white",
+  };
+
   return (
     <div
       dir={isRTL ? "rtl" : "ltr"}
-      className="min-h-screen bg-slate-900 flex items-center justify-center relative overflow-hidden"
+      className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden"
+      style={{ background: "linear-gradient(135deg, #0a0e27 0%, #121629 60%, #0f1c3f 100%)" }}
     >
-      {/* background geometric shapes */}
+      {/* background blobs */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-96 h-96 bg-cyan-500 opacity-10 rounded-full blur-3xl" />
-        <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-violet-500 opacity-10 rounded-full blur-3xl" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-indigo-500 opacity-5 rounded-full blur-3xl" />
-        {/* grid pattern */}
-        <div
-          className="absolute inset-0 opacity-5"
+        <div className="absolute top-1/4 right-1/4 w-96 h-96 rounded-full blur-3xl opacity-20"
+          style={{ background: "radial-gradient(circle, #00d9ff, transparent)" }} />
+        <div className="absolute bottom-1/4 left-1/4 w-96 h-96 rounded-full blur-3xl opacity-20"
+          style={{ background: "radial-gradient(circle, #ff2e7e, transparent)" }} />
+        <div className="absolute inset-0 opacity-5"
           style={{
-            backgroundImage:
-              "linear-gradient(rgba(99,179,237,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(99,179,237,0.3) 1px, transparent 1px)",
+            backgroundImage: "linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)",
             backgroundSize: "40px 40px",
-          }}
-        />
+          }} />
       </div>
 
-      {/* language switcher */}
-      <div className="absolute top-6 right-6 flex items-center gap-2">
-        <Globe size={16} className="text-slate-400" />
-        <div className="flex gap-1">
-          {languages.map((lang) => (
-            <button
-              key={lang.code}
-              onClick={() => i18n.changeLanguage(lang.code)}
-              className={`px-3 py-1 rounded-full text-xs font-medium transition-all duration-200 ${
-                i18n.language === lang.code
-                  ? "bg-cyan-500 text-slate-900"
-                  : "text-slate-400 hover:text-white"
-              }`}
-            >
-              {lang.label}
-            </button>
-          ))}
-        </div>
+      {/* language switcher — always top-right regardless of RTL */}
+      <div className="absolute top-5 right-5 flex gap-1" dir="ltr">
+        {languages.map((lang) => (
+          <button
+            key={lang.code}
+            onClick={() => i18n.changeLanguage(lang.code)}
+            className="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200"
+            style={{
+              background: i18n.language === lang.code ? "rgba(255,255,255,0.15)" : "transparent",
+              color: i18n.language === lang.code ? "#ffffff" : "rgba(255,255,255,0.4)",
+              border: i18n.language === lang.code ? "1px solid rgba(255,255,255,0.2)" : "1px solid transparent",
+            }}
+          >
+            {lang.label}
+          </button>
+        ))}
       </div>
 
       {/* card */}
-      <div className="relative w-full max-w-md mx-4">
-        {/* glowing border effect */}
-        <div className="absolute -inset-0.5 bg-gradient-to-r from-cyan-500 to-violet-500 rounded-2xl opacity-20 blur" />
+      <div
+        className="relative w-full max-w-md mx-4 rounded-2xl p-8"
+        style={{
+          background: "rgba(255,255,255,0.05)",
+          border: "1px solid rgba(255,255,255,0.1)",
+          backdropFilter: "blur(20px)",
+          boxShadow: "0 25px 50px rgba(0,0,0,0.5)",
+        }}
+      >
+        {/* logo */}
+        <div className="flex justify-center mb-6">
+          <img src="/logo.png" alt="STEAM-IQRA" className="h-20 w-20 object-contain" />
+        </div>
 
-        <div className="relative bg-slate-800 border border-slate-700 rounded-2xl p-8 shadow-2xl">
-          {/* logo / title */}
-          <div className="mb-8 text-center">
-            <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-400 to-violet-500 mb-4 shadow-lg shadow-cyan-500/20">
-              <span className="text-2xl font-black text-white">S</span>
-            </div>
-            <h1 className="text-2xl font-bold text-white tracking-tight">
-              {t("login.title")}
-            </h1>
-            <p className="text-slate-400 text-sm mt-1">{t("login.subtitle")}</p>
+        {/* title */}
+        <div className="text-center mb-8">
+          <h1 className="text-2xl font-bold text-white mb-1">{t("login.title")}</h1>
+          <p className="text-sm" style={{ color: "rgba(255,255,255,0.4)" }}>{t("login.subtitle")}</p>
+        </div>
+
+        {/* form */}
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* email */}
+          <div className="flex flex-col gap-2">
+            <label className="text-sm font-medium" style={{ color: "rgba(255,255,255,0.7)" }}>
+              {t("login.email")}
+            </label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              placeholder="your@email.com"
+              className="w-full px-4 py-3 rounded-xl outline-none transition-all duration-200"
+              style={inputStyle}
+              onFocus={(e) => (e.target.style.borderColor = "#00d9ff")}
+              onBlur={(e) => (e.target.style.borderColor = "rgba(255,255,255,0.1)")}
+            />
           </div>
 
-          {/* form */}
-          <form onSubmit={handleSubmit} className="space-y-5">
-            {/* email */}
-            <div className="space-y-1.5">
-              <label className="text-sm font-medium text-slate-300">
-                {t("login.email")}
-              </label>
+          {/* password */}
+          <div className="flex flex-col gap-2">
+            <label className="text-sm font-medium" style={{ color: "rgba(255,255,255,0.7)" }}>
+              {t("login.password")}
+            </label>
+            {/* always ltr so eye button stays inside the input */}
+            <div className="relative" dir={isRTL ? "rtl" : "ltr"}>
               <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 required
-                className="w-full px-4 py-3 rounded-xl bg-slate-700/50 border border-slate-600 text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all duration-200"
-                placeholder="example@steam-iqra.com"
+                placeholder="••••••••"
+                className="w-full py-3 rounded-xl outline-none transition-all duration-200"
+                style={{...inputStyle, paddingLeft: isRTL ? "2.75rem" : "1rem", paddingRight: isRTL ? "1rem" : "2.75rem"}}
+                onFocus={(e) => (e.target.style.borderColor = "#00d9ff")}
+                onBlur={(e) => (e.target.style.borderColor = "rgba(255,255,255,0.1)")}
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute inset-y-0 flex items-center transition-colors"
+                style={{ color: "rgba(255,255,255,0.3)", left: isRTL ? "0.75rem" : "auto", right: isRTL ? "auto" : "0.75rem" }}
+              >
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
             </div>
+          </div>
 
-            {/* password */}
-            <div className="space-y-1.5">
-              <label className="text-sm font-medium text-slate-300">
-                {t("login.password")}
-              </label>
-              <div className="relative">
-                <input
-                  type={showPassword ? "text" : "password"}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  className="w-full px-4 py-3 rounded-xl bg-slate-700/50 border border-slate-600 text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all duration-200"
-                  placeholder="••••••••"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 left-3 flex items-center text-slate-400 hover:text-cyan-400 transition-colors"
-                >
-                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                </button>
-              </div>
-            </div>
-
-            {/* error */}
-            {error && (
-              <div className="px-4 py-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm text-center">
-                {error}
-              </div>
-            )}
-
-            {/* submit */}
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-violet-500 text-white font-semibold hover:opacity-90 active:scale-95 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-cyan-500/20"
+          {/* error */}
+          {error && (
+            <div
+              className="px-4 py-3 rounded-xl text-sm text-center"
+              style={{
+                background: "rgba(255,46,126,0.1)",
+                border: "1px solid rgba(255,46,126,0.3)",
+                color: "#ff2e7e",
+              }}
             >
-              {isLoading ? (
-                <span className="flex items-center justify-center gap-2">
-                  <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  {t("common.loading")}
-                </span>
-              ) : (
-                t("login.submit")
-              )}
-            </button>
-          </form>
+              {error}
+            </div>
+          )}
+
+          {/* submit */}
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="w-full py-3 rounded-xl font-semibold text-white transition-all duration-200 hover:opacity-90 active:scale-95 disabled:opacity-50"
+            style={{ background: "linear-gradient(90deg, #00d9ff, #ff2e7e)" }}
+          >
+            {isLoading ? (
+              <span className="flex items-center justify-center gap-2">
+                <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                {t("common.loading")}
+              </span>
+            ) : (
+              t("login.submit")
+            )}
+          </button>
+        </form>
+
+        {/* divider */}
+        <div className="mt-6 flex items-center gap-3">
+          <div className="flex-1 h-px" style={{ background: "rgba(255,255,255,0.1)" }} />
+          <span className="text-xs font-medium px-2" style={{ color: "rgba(255,255,255,0.3)" }}>
+            STEAM-IQRA
+          </span>
+          <div className="flex-1 h-px" style={{ background: "rgba(255,255,255,0.1)" }} />
         </div>
       </div>
+
+      {/* footer */}
+      <p className="mt-6 text-xs" style={{ color: "rgba(255,255,255,0.2)" }}>
+        © 2024 STEAM-IQRA. All rights reserved.
+      </p>
     </div>
   );
 };

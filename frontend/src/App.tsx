@@ -3,19 +3,24 @@ import { useAuth } from "./context/AuthContext";
 import LoginPage from "./pages/LoginPage";
 import ChangeCredentialsPage from "./pages/ChangeCredentialsPage";
 import ChangePasswordPage from "./pages/ChangePasswordPage";
+import DashboardLayout from "./pages/dashboard/DashboardLayout";
+import DashboardPage from "./pages/dashboard/DashboardPage";
+import TrainersPage from "./pages/dashboard/TrainersPage";
+import StudentsPage from "./pages/dashboard/StudentsPage";
 
 const App = () => {
   const { token, user, mustChangeCredentials, isLoading } = useAuth();
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-900">
-        <div className="w-8 h-8 border-4 border-cyan-400 border-t-transparent rounded-full animate-spin" />
+      <div className="min-h-screen flex items-center justify-center"
+        style={{ background: "#0a0e27" }}>
+        <div className="w-8 h-8 border-4 border-t-transparent rounded-full animate-spin"
+          style={{ borderColor: "#00d9ff", borderTopColor: "transparent" }} />
       </div>
     );
   }
 
-  // not logged in → login page
   if (!token) {
     return (
       <Routes>
@@ -25,7 +30,6 @@ const App = () => {
     );
   }
 
-  // logged in but must change credentials (admin first login)
   if (mustChangeCredentials && user?.role === "admin") {
     return (
       <Routes>
@@ -35,7 +39,6 @@ const App = () => {
     );
   }
 
-  // logged in but must change password (trainer/student first login)
   if (mustChangeCredentials && (user?.role === "trainer" || user?.role === "student")) {
     return (
       <Routes>
@@ -45,9 +48,13 @@ const App = () => {
     );
   }
 
-  // fully authenticated → redirect to dashboard (we'll build this later)
   return (
     <Routes>
+      <Route path="/dashboard" element={<DashboardLayout />}>
+        <Route index element={<DashboardPage />} />
+        <Route path="trainers" element={<TrainersPage />} />
+        <Route path="students" element={<StudentsPage />} />
+      </Route>
       <Route path="*" element={<Navigate to="/dashboard" replace />} />
     </Routes>
   );
