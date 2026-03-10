@@ -1,0 +1,32 @@
+{
+  "login": {
+    "title": "Welcome back",
+    "subtitle": "Sign in to continue",
+    "email": "Email address",
+    "password": "Password",
+    "submit": "Sign in",
+    "error": "Invalid email or password"
+  },
+  "changeCredentials": {
+    "title": "Secure your account",
+    "subtitle": "You must change your credentials before continuing",
+    "newEmail": "New email address",
+    "newPassword": "New password",
+    "submit": "Save and sign in",
+    "success": "Credentials updated successfully"
+  },
+  "changePassword": {
+    "title": "Change password",
+    "subtitle": "You must change your password before continuing",
+    "currentPassword": "Current password",
+    "newPassword": "New password",
+    "submit": "Update password",
+    "success": "Password updated successfully",
+    "error": "Current password is incorrect"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Something went wrong",
+    "language": "Language"
+  }
+}

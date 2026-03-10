@@ -1,0 +1,32 @@
+{
+  "login": {
+    "title": "Bon retour",
+    "subtitle": "Connectez-vous pour continuer",
+    "email": "Adresse e-mail",
+    "password": "Mot de passe",
+    "submit": "Se connecter",
+    "error": "Email ou mot de passe incorrect"
+  },
+  "changeCredentials": {
+    "title": "Sécurisez votre compte",
+    "subtitle": "Vous devez changer vos identifiants avant de continuer",
+    "newEmail": "Nouvel e-mail",
+    "newPassword": "Nouveau mot de passe",
+    "submit": "Enregistrer et se connecter",
+    "success": "Identifiants mis à jour avec succès"
+  },
+  "changePassword": {
+    "title": "Changer le mot de passe",
+    "subtitle": "Vous devez changer votre mot de passe avant de continuer",
+    "currentPassword": "Mot de passe actuel",
+    "newPassword": "Nouveau mot de passe",
+    "submit": "Mettre à jour",
+    "success": "Mot de passe mis à jour avec succès",
+    "error": "Mot de passe actuel incorrect"
+  },
+  "common": {
+    "loading": "Chargement...",
+    "error": "Une erreur est survenue",
+    "language": "Langue"
+  }
+}
