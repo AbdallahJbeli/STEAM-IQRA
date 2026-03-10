@@ -8,7 +8,7 @@ const PORT = process.env.PORT || 4001;
 
 app.listen(PORT, async () => {
   console.log(`Auth Service running on port ${PORT}`);
-  await AuthService.initAdmin().catch((err) =>
-    console.error("Admin init error:", err)
+  await AuthService.seedAdmin().catch((err) =>
+    console.error("Admin seed error:", err)
   );
 });
