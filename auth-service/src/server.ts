@@ -1,14 +1,14 @@
-import app from "./app";
 import dotenv from "dotenv";
-
-
-
 dotenv.config();
 
-
+import app from "./app";
+import { AuthService } from "./services/auth.service";
 
 const PORT = process.env.PORT || 4001;
 
-app.listen(PORT, () => {
-    console.log(`Auth Service running on port ${PORT}`);
-})
+app.listen(PORT, async () => {
+  console.log(`Auth Service running on port ${PORT}`);
+  await AuthService.initAdmin().catch((err) =>
+    console.error("Admin init error:", err)
+  );
+});
