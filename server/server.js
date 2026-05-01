@@ -1,8 +1,10 @@
-import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
-import pool from './config/database.js';
+import dotenv from 'dotenv';
 
+import authRoutes from './routes/auth.routes.js';
+
+dotenv.config();
 
 
 const app = express();
@@ -12,8 +14,10 @@ app.use(cors());
 app.use(express.json());
 
 
+app.use('/auth', authRoutes);
+
 app.get('/', (req, res) => {
-  res.send('Hello, World!');
+  res.send('API is running');
 });
 
 app.listen(PORT, () => {
