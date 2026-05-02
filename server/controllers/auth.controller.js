@@ -6,15 +6,15 @@ import { getUserByEmail } from '../models/user.model.js';
 
 export const loginController = async (req, res) => {
     const { email, password } = req.body;
-    
-    if (!email || !password) {
+    const normalizedEmail = email.trim().toLowerCase();    
+    if (!normalizedEmail || !password) {
         return res.status(400).json({ 
             message: 'Email and password are required' 
         });
     }
 
     try {
-        const user = await getUserByEmail(email);
+        const user = await getUserByEmail(normalizedEmail);
     
         if (!user) {    
             return res.status(401).json({ 
