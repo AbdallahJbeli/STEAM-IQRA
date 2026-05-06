@@ -1,12 +1,14 @@
 import express from 'express';
 import cors from 'cors';
-import dotenv from 'dotenv';
 import helmet from 'helmet';
 
+import './config/env.js';
 import authRoutes from './routes/auth.routes.js';
 import { authMiddleware } from './middleware/auth.middleware.js';
+import { allowRoles } from './middleware/role.middleware.js';
 
-dotenv.config();
+
+
 
 const requiredEnvVars = ['CLIENT_URL', 'SERVER_PORT', 'JWT_SECRET'];
 const missingVars = requiredEnvVars.filter((name) => !process.env[name]);
@@ -57,7 +59,7 @@ app.get('/health', (req, res) => res.status(200).json({ status: 'ok' }));
 
 app.use('/api/auth', authRoutes);
 
-app.get('/api/protected', authMiddleware, (req, res) => {
+app.get('/api/protected', authMiddleware, allowRoles('admin'), (req, res) => {
   res.json({ message: 'Access granted', user: req.user });
 });
 

@@ -1,3 +1,7 @@
+import dotenv from 'dotenv';
+
+dotenv.config();
+
 const requiredEnvVars = ['JWT_SECRET'];
 const missingVars = requiredEnvVars.filter((name) => !process.env[name]);
 
