@@ -8,7 +8,7 @@ export async function getUserByEmail(email) {
   try {
     const result = await pool.query(
       'SELECT id, username, email, password, role FROM users WHERE email = $1',
-      [email.trim().toLowerCase()]
+      [email]
     );
 
     return result.rows[0] ?? null;
