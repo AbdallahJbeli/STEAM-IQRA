@@ -1,17 +1,24 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import helmet from 'helmet';
 
 import authRoutes from './routes/auth.routes.js';
 import { authMiddleware } from './middleware/auth.middleware.js';
 
 dotenv.config();
 
-const requiredEnvVars = ['CLIENT_URL', 'SERVER_PORT'];
+const requiredEnvVars = ['CLIENT_URL', 'SERVER_PORT', 'JWT_SECRET'];
 const missingVars = requiredEnvVars.filter((name) => !process.env[name]);
 
 if (missingVars.length > 0) {
   console.error(`Missing required environment variables: ${missingVars.join(', ')}`);
+  process.exit(1);
+}
+
+const JWT_SECRET = process.env.JWT_SECRET;
+if (typeof JWT_SECRET !== 'string' || JWT_SECRET.length < 32) {
+  console.error('JWT_SECRET must be a secure string of at least 32 characters');
   process.exit(1);
 }
 
@@ -29,6 +36,14 @@ if (TRUST_PROXY) {
   app.set('trust proxy', 1);
 }
 
+app.use(helmet());
+app.use(
+  cors({
+    origin: CLIENT_URL,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    credentials: true,
+  })
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
@@ -37,13 +52,6 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(
-  cors({
-    origin: CLIENT_URL,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    credentials: true,
-  })
-);
 
 app.get('/health', (req, res) => res.status(200).json({ status: 'ok' }));
 
