@@ -2,36 +2,10 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 
-import './config/env.js';
 import authRoutes from './routes/auth.routes.js';
 import { authMiddleware } from './middleware/auth.middleware.js';
 import { allowRoles } from './middleware/role.middleware.js';
-
-
-
-
-const requiredEnvVars = ['CLIENT_URL', 'SERVER_PORT', 'JWT_SECRET'];
-const missingVars = requiredEnvVars.filter((name) => !process.env[name]);
-
-if (missingVars.length > 0) {
-  console.error(`Missing required environment variables: ${missingVars.join(', ')}`);
-  process.exit(1);
-}
-
-const JWT_SECRET = process.env.JWT_SECRET;
-if (typeof JWT_SECRET !== 'string' || JWT_SECRET.length < 32) {
-  console.error('JWT_SECRET must be a secure string of at least 32 characters');
-  process.exit(1);
-}
-
-const PORT = parseInt(process.env.SERVER_PORT, 10);
-if (Number.isNaN(PORT) || PORT <= 0) {
-  console.error('SERVER_PORT must be a valid positive number');
-  process.exit(1);
-}
-
-const CLIENT_URL = process.env.CLIENT_URL;
-const TRUST_PROXY = process.env.TRUST_PROXY === 'true';
+import { CLIENT_URL, SERVER_PORT, TRUST_PROXY } from './config/env.js';
 
 const app = express();
 if (TRUST_PROXY) {
@@ -51,7 +25,7 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use((req, res, next) => {
   console.log(`${req.method} ${req.originalUrl} - ${req.ip}`);
-  next();
+  return next();
 });
 
 
@@ -74,8 +48,8 @@ app.use((err, req, res, next) => {
   res.status(500).json({ message: 'Internal server error' });
 });
 
-const server = app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+const server = app.listen(SERVER_PORT, () => {
+  console.log(`Server is running on port ${SERVER_PORT}`);
 });
 
 process.on('unhandledRejection', (reason) => {

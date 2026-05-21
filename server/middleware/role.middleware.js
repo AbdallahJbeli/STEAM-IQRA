@@ -8,6 +8,6 @@ export const allowRoles = (...roles) => {
       return res.status(403).json({ message: 'Forbidden: insufficient permissions' });
     }
 
-    next();
+    return next();
   };
 }; 

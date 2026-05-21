@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { getUserByEmail } from '../models/user.model.js';
+import { getUserByEmail } from '../models/auth.model.js';
 import { JWT_SECRET, JWT_EXPIRES_IN } from '../config/env.js';
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -28,6 +28,18 @@ export const loginController = async (req, res) => {
     if (!user) {
       return res.status(401).json({
         message: 'Invalid email or password'
+      });
+    }
+
+    if (user.is_active === false) {
+      return res.status(403).json({
+        message: 'Your account is not active'
+      });
+    }
+
+    if (user.email_verified_at === null) {
+      return res.status(403).json({
+        message: 'Email address is not verified'
       });
     }
 
