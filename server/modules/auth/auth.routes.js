@@ -2,8 +2,8 @@ import express from 'express';
 import rateLimit from 'express-rate-limit';
 import RedisStore from 'rate-limit-redis';
 import { createClient } from 'redis';
-import { loginController } from '../controllers/auth.controller.js';
-import { REDIS_URL } from '../config/env.js';
+import { loginController } from './auth.controller.js';
+import { REDIS_URL } from '../../config/env.js';
 
 const router = express.Router();
 

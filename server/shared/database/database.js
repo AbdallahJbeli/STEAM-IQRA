@@ -1,5 +1,5 @@
 import pkg from 'pg';
-import { DB_HOST, DB_USER, DB_PASSWORD, DB_NAME, DB_PORT } from './env.js';
+import { DB_HOST, DB_USER, DB_PASSWORD, DB_NAME, DB_PORT } from '../../config/env.js';
 const { Pool } = pkg;
 
 const pool = new Pool({

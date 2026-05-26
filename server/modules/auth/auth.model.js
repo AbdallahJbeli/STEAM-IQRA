@@ -1,4 +1,4 @@
-import pool from '../config/database.js';
+import pool from '../../shared/database/database.js';
 
 export async function getUserByEmail(email) {
   if (!email || typeof email !== 'string') {

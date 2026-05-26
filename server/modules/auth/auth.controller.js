@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { getUserByEmail } from '../models/auth.model.js';
-import { JWT_SECRET, JWT_EXPIRES_IN } from '../config/env.js';
+import { getUserByEmail } from './auth.model.js';
+import { JWT_SECRET, JWT_EXPIRES_IN } from '../../config/env.js';
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
